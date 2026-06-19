@@ -8,7 +8,7 @@ const TreeNode = ({ node, level }) => {
   const [editTitle, setEditTitle] = useState('');
   const inputRef = useRef(null);
   
-  const { addNode, updateNodeTitle } = useProjectStore();
+  const { addNode, updateNodeTitle, deleteNode } = useProjectStore();
 
   const isFolder = node.type === 'folder' || node.type === 'sequence';
   const hasChildren = node.children && node.children.length > 0;
@@ -49,6 +49,13 @@ const TreeNode = ({ node, level }) => {
     e.stopPropagation();
     addNode(node.id, type);
     setIsOpen(true);
+  };
+
+  const handleDelete = (e) => {
+    e.stopPropagation();
+    if (window.confirm('정말 삭제하시겠습니까? 하위 항목도 모두 삭제됩니다.')) {
+      deleteNode(node.id);
+    }
   };
 
   const getNodeIcon = () => {
@@ -94,13 +101,14 @@ const TreeNode = ({ node, level }) => {
           <div className="node-actions">
             {node.type === 'folder' && (
               <>
-                <button onClick={(e) => handleAdd(e, 'folder')} title="하위 카테고리 추가">+폴더</button>
-                <button onClick={(e) => handleAdd(e, 'sequence')} title="시퀀스 추가">+시퀀스</button>
+                <button className="action-add" onClick={(e) => handleAdd(e, 'folder')} title="하위 카테고리 추가">+폴더</button>
+                <button className="action-add" onClick={(e) => handleAdd(e, 'sequence')} title="시퀀스 추가">+시퀀스</button>
               </>
             )}
             {node.type === 'sequence' && (
-              <button onClick={(e) => handleAdd(e, 'scene')} title="씬 추가">+씬</button>
+              <button className="action-add" onClick={(e) => handleAdd(e, 'scene')} title="씬 추가">+씬</button>
             )}
+            <button className="action-delete" onClick={(e) => handleDelete(e)} title="삭제">-</button>
           </div>
         )}
 
