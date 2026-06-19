@@ -5,27 +5,26 @@
   position: relative;
 }
 
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
-  outline: none;
-  font-family: var(--font-sans);
+.editable-node {
+  background: white;
+  border: 2px solid var(--accent-color);
+  border-radius: 8px;
+  padding: 10px;
+  min-width: 150px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.brainstorming-panel input:focus {
-  border-color: var(--border-focus);
-}
-
-.brainstorming-panel button {
-  padding: 8px 16px;
-  background-color: var(--accent-primary);
-  color: white;
+.editable-node input {
+  width: 100%;
   border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s;
+  outline: none;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  background: transparent;
+  color: var(--text-primary);
 }
 
-.brainstorming-panel button:hover {
-  background-color: var(--accent-hover);
+.editable-node input::placeholder {
+  color: var(--text-muted);
 }
