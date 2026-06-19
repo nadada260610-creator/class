@@ -8,10 +8,11 @@ const TreeNode = ({ node, level }) => {
   const [editTitle, setEditTitle] = useState('');
   const inputRef = useRef(null);
   
-  const { addNode, updateNodeTitle, deleteNode } = useProjectStore();
+  const { addNode, updateNodeTitle, deleteNode, selectedNodeId, setSelectedNodeId } = useProjectStore();
 
   const isFolder = node.type === 'folder' || node.type === 'sequence';
   const hasChildren = node.children && node.children.length > 0;
+  const isSelected = selectedNodeId === node.id;
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -21,6 +22,11 @@ const TreeNode = ({ node, level }) => {
 
   const toggleOpen = () => {
     if (isFolder && !isEditing) setIsOpen(!isOpen);
+  };
+
+  const handleTitleClick = (e) => {
+    e.stopPropagation();
+    setSelectedNodeId(node.id);
   };
 
   const handleDoubleClick = (e) => {
@@ -53,9 +59,7 @@ const TreeNode = ({ node, level }) => {
 
   const handleDelete = (e) => {
     e.stopPropagation();
-    if (window.confirm('정말 삭제하시겠습니까? 하위 항목도 모두 삭제됩니다.')) {
-      deleteNode(node.id);
-    }
+    deleteNode(node.id); // 확인창 없이 즉시 삭제
   };
 
   const getNodeIcon = () => {
@@ -70,7 +74,7 @@ const TreeNode = ({ node, level }) => {
   return (
     <div className="tree-node-wrapper">
       <div 
-        className={`tree-node ${node.type}`} 
+        className={`tree-node ${node.type} ${isSelected ? 'selected' : ''}`} 
         style={indentStyle}
         onClick={toggleOpen}
       >
@@ -89,8 +93,9 @@ const TreeNode = ({ node, level }) => {
         ) : (
           <span 
             className="node-title" 
+            onClick={handleTitleClick}
             onDoubleClick={handleDoubleClick}
-            title="더블클릭하여 이름 수정"
+            title="클릭하여 선택, 더블클릭하여 이름 수정"
           >
             {node.type === 'scene' ? `S#${node.scene_number}. ` : ''}
             {node.title || node.summary}

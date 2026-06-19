@@ -50,6 +50,13 @@
   color: var(--text-primary);
 }
 
+.tree-node.selected {
+  background-color: var(--bg-hover);
+  color: var(--accent-color);
+  font-weight: 700;
+  border-left: 3px solid var(--accent-color);
+}
+
 .tree-node.scene {
   color: var(--text-primary);
 }

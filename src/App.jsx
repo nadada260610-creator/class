@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import Sidebar from './components/Sidebar/Sidebar';
-import ScenarioEditor from './components/Editor/ScenarioEditor';
+import MainEditorView from './components/Editor/MainEditorView';
 import Brainstorming from './pages/Brainstorming';
 import Signup from './pages/Signup';
 import SecurityBanner from './components/SecurityBanner';
@@ -24,7 +24,7 @@ function MainLayout() {
           </div>
         </header>
         <Routes>
-          <Route path="/" element={<ScenarioEditor />} />
+          <Route path="/" element={<MainEditorView />} />
           <Route path="/brainstorming" element={<Brainstorming />} />
         </Routes>
       </main>

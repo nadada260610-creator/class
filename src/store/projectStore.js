@@ -93,6 +93,10 @@ const initialProjectState = {
 const useProjectStore = create((set, get) => ({
   project: initialProjectState,
   
+  // 현재 우측 화면에 보여줄 선택된 노드 ID
+  selectedNodeId: null,
+  setSelectedNodeId: (id) => set({ selectedNodeId: id }),
+
   // 동기화 상태 표시용
   syncStatus: 'idle', // 'idle' | 'syncing' | 'saved' | 'error'
 
@@ -198,6 +202,23 @@ const useProjectStore = create((set, get) => ({
           return node;
         });
       const updatedProject = { ...state.project, nodes: updateTitle(state.project.nodes) };
+      scheduleSync(updatedProject);
+      return { project: updatedProject, syncStatus: 'syncing' };
+    });
+  },
+
+  // 폴더/시퀀스 메모 업데이트
+  updateNodeMemo: (nodeId, memo) => {
+    set((state) => {
+      const updateMemo = (nodes) =>
+        nodes.map((node) => {
+          if (node.id === nodeId) {
+            return { ...node, memo };
+          }
+          if (node.children) return { ...node, children: updateMemo(node.children) };
+          return node;
+        });
+      const updatedProject = { ...state.project, nodes: updateMemo(state.project.nodes) };
       scheduleSync(updatedProject);
       return { project: updatedProject, syncStatus: 'syncing' };
     });
