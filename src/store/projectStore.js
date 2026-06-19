@@ -50,6 +50,9 @@ const scheduleSync = (project) => {
   }, SYNC_DEBOUNCE_MS);
 };
 
+// ─── 고유 ID 생성기 ──────────────────────────────────────────────────────────
+const generateId = (prefix) => `${prefix}_${Math.random().toString(36).substr(2, 9)}`;
+
 // ─── 기본 목업 데이터 (초기 상태) ────────────────────────────────────────────
 const initialProjectState = {
   project_id: 'proj_01',
@@ -61,16 +64,23 @@ const initialProjectState = {
       title: '제 1부',
       children: [
         {
-          id: 'node_seq_01',
-          type: 'sequence',
-          title: '오프닝 시퀀스',
+          id: 'node_folder_02',
+          type: 'folder',
+          title: '<3장구조>',
           children: [
             {
-              id: 'node_scene_01',
-              type: 'scene',
-              scene_number: 1,
-              summary: '씬',
-              content: 'S# 1. 카페 (낮)\n\n지문이 들어갑니다...'
+              id: 'node_seq_01',
+              type: 'sequence',
+              title: '시퀀스',
+              children: [
+                {
+                  id: 'node_scene_01',
+                  type: 'scene',
+                  scene_number: 1,
+                  summary: '씬',
+                  content: 'S# 1. 카페 (낮)\n\n지문이 들어갑니다...'
+                }
+              ]
             }
           ]
         }
@@ -134,6 +144,76 @@ const useProjectStore = create((set, get) => ({
         ...state.project,
         nodes: updateNode(state.project.nodes),
       };
+      scheduleSync(updatedProject);
+      return { project: updatedProject, syncStatus: 'syncing' };
+    });
+  },
+
+  // 노드 추가 (폴더, 시퀀스, 씬)
+  addNode: (parentId, type) => {
+    set((state) => {
+      const newNode = {
+        id: generateId(`node_${type}`),
+        type,
+        ...(type === 'scene' ? { scene_number: 999, summary: '새 씬', content: '' } : { title: type === 'folder' ? '새 카테고리' : '새 시퀀스', children: [] })
+      };
+
+      const addChild = (nodes) => {
+        return nodes.map((node) => {
+          if (node.id === parentId) {
+            return { ...node, children: [...(node.children || []), newNode] };
+          }
+          if (node.children) {
+            return { ...node, children: addChild(node.children) };
+          }
+          return node;
+        });
+      };
+
+      let newNodes = state.project.nodes;
+      // 루트 레벨 추가인 경우 (parentId가 없거나 'root'인 경우)
+      if (!parentId || parentId === 'root') {
+        newNodes = [...newNodes, newNode];
+      } else {
+        newNodes = addChild(newNodes);
+      }
+
+      const { updatedNodes } = assignSceneNumbers(newNodes);
+      const updatedProject = { ...state.project, nodes: updatedNodes };
+      scheduleSync(updatedProject);
+      return { project: updatedProject, syncStatus: 'syncing' };
+    });
+  },
+
+  // 노드 제목 수정 (더블 클릭)
+  updateNodeTitle: (nodeId, newTitle) => {
+    set((state) => {
+      const updateTitle = (nodes) =>
+        nodes.map((node) => {
+          if (node.id === nodeId) {
+            if (node.type === 'scene') return { ...node, summary: newTitle };
+            return { ...node, title: newTitle };
+          }
+          if (node.children) return { ...node, children: updateTitle(node.children) };
+          return node;
+        });
+      const updatedProject = { ...state.project, nodes: updateTitle(state.project.nodes) };
+      scheduleSync(updatedProject);
+      return { project: updatedProject, syncStatus: 'syncing' };
+    });
+  },
+
+  // 노드 삭제
+  deleteNode: (nodeId) => {
+    set((state) => {
+      const removeNode = (nodes) => {
+        return nodes.filter(n => n.id !== nodeId).map(n => {
+          if (n.children) return { ...n, children: removeNode(n.children) };
+          return n;
+        });
+      };
+      const { updatedNodes } = assignSceneNumbers(removeNode(state.project.nodes));
+      const updatedProject = { ...state.project, nodes: updatedNodes };
       scheduleSync(updatedProject);
       return { project: updatedProject, syncStatus: 'syncing' };
     });

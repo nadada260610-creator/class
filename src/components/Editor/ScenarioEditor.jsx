@@ -4,6 +4,8 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
+import { ListPlugin } from '@lexical/react/LexicalListPlugin';
+import { ListNode, ListItemNode } from '@lexical/list';
 import ShortcutPlugin from './plugins/ShortcutPlugin';
 import './EditorStyles.css';
 import useProjectStore from '../../store/projectStore';
@@ -51,6 +53,7 @@ const ScenarioEditor = () => {
     namespace: 'AuthorBoxEditor',
     theme,
     onError,
+    nodes: [ListNode, ListItemNode],
   };
 
   return (
@@ -64,6 +67,7 @@ const ScenarioEditor = () => {
               ErrorBoundary={LexicalErrorBoundary}
             />
             <HistoryPlugin />
+            <ListPlugin />
             <ShortcutPlugin />
           </div>
         </LexicalComposer>
