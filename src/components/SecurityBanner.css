@@ -1,0 +1,35 @@
+.security-banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ffd60a;
+  color: #1d1d1d;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  z-index: 9999;
+  font-size: 13px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.banner-content {
+  flex: 1;
+  text-align: center;
+}
+
+.banner-close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 0 5px;
+  color: #1d1d1d;
+}
+
+.banner-close:hover {
+  opacity: 0.7;
+}
+/* Banner adds height, adjust app container if needed. Since it's absolute, it covers top part. We can push app-container content down via JS or layout, but absolute is fine for MVP warning. */

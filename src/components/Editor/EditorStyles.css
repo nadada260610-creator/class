@@ -1,0 +1,60 @@
+.editor-container {
+  flex: 1;
+  background-color: var(--bg-secondary);
+  display: flex;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 40px 0;
+}
+
+.editor-page {
+  background-color: var(--page-bg);
+  width: var(--page-width);
+  min-height: var(--page-min-height);
+  padding: 80px 60px;
+  box-shadow: var(--page-shadow);
+  border-radius: var(--radius-sm);
+  position: relative;
+}
+
+/* 가상 A4 페이지 구분선 가이드라인 (점선) */
+.editor-page::after {
+  content: '';
+  position: absolute;
+  top: var(--page-min-height);
+  left: 0;
+  width: 100%;
+  border-top: 1px dashed var(--accent-hover);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.editor-input {
+  min-height: 100%;
+  outline: none;
+  line-height: 1.8;
+  font-size: 11pt; /* 일반 대본 표준 폰트 크기 */
+  color: var(--text-primary);
+}
+
+/* 지문 스타일 (기본) */
+.editor-input p {
+  margin: 0 0 1em 0;
+  text-align: left;
+}
+
+/* 대사 스타일 */
+.editor-input p.dialogue {
+  text-align: center;
+  margin-left: 20%;
+  margin-right: 20%;
+  margin-bottom: 0.5em;
+  font-weight: 500;
+}
+
+/* 캐릭터 이름 등 (추가 가능) */
+.editor-input p.character {
+  text-align: center;
+  margin-bottom: 0;
+  font-weight: bold;
+}
