@@ -29,6 +29,21 @@
   pointer-events: none;
 }
 
+.editor-inner {
+  position: relative;
+  min-height: 100%;
+}
+
+.editor-placeholder-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--secondary-text, #999);
+  pointer-events: none; /* 클릭을 가로채지 않고 통과시킴 */
+  font-size: 11pt;
+  line-height: 1.8;
+}
+
 .editor-input {
   min-height: 100%;
   outline: none;

@@ -69,7 +69,7 @@ const initialProjectState = {
               id: 'node_scene_01',
               type: 'scene',
               scene_number: 1,
-              summary: '주인공이 운명적인 사건을 마주하는 씬',
+              summary: '씬',
               content: 'S# 1. 카페 (낮)\n\n지문이 들어갑니다...'
             }
           ]

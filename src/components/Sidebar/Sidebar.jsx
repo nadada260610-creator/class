@@ -8,9 +8,6 @@ const Sidebar = () => {
 
   return (
     <aside className="sidebar">
-      <div className="sidebar-header">
-        <h2>{project.title}</h2>
-      </div>
       <div className="sidebar-content">
         <Tree nodes={project.nodes} />
       </div>
